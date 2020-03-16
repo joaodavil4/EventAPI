@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.EventDetailsActivity"
     tools:showIn="@layout/activity_event_detail"
-    android:id="@+id/detailsBackground">
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivEvent" />
+    android:id="@+id/detailsBackground"
+    android:orientation="vertical"
+    android:layout_margin="16dp">
 
     <ImageView
         android:id="@+id/ivEvent"
@@ -24,35 +17,25 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_gravity="center"/>
 
     <TextView
         android:id="@+id/tvEventTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view" />
+        android:textAlignment="center"
+        android:layout_gravity="center"/>
 
     <TextView
         android:textAllCaps="true"
         android:id="@+id/tvEventPrice"
-        android:layout_width="80dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:padding="4dp"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toStartOf="@+id/tvEventDescription"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvEventTitle" />
+        android:textSize="30sp"
+        android:textAlignment="center"/>
 
     <TextView
         android:visibility="gone"
@@ -62,32 +45,25 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:padding="4dp"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tvEventPrice"
-        app:layout_constraintTop_toBottomOf="@+id/tvEventTitle" />
-
-
+        android:textAlignment="center"/>
 
     <TextView
         android:id="@+id/tvEventDate"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:textAlignment="textEnd"
+        android:textSize="25sp"/>
 
     <Button
         android:id="@+id/btCheckin"
         android:text="Check-in"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:gravity="bottom|center"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
 
     </Button>
 
-    <androidx.constraintlayout.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:visibility="gone"
         android:id="@+id/timeoutLayout"
         android:layout_width="match_parent"
@@ -109,7 +85,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
 
-    </androidx.constraintlayout.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ProgressBar
         android:visibility="gone"
@@ -126,4 +102,4 @@
 
 
 
-</androidx.constraintlayout.ConstraintLayout>
+</LinearLayout>

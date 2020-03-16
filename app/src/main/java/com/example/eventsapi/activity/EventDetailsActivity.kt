@@ -1,6 +1,7 @@
 package com.example.eventsapi.activity
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.eventsapi.R
 import com.example.eventsapi.model.Event
+import com.example.eventsapi.shared.FriendlyDataCtrl
 import com.squareup.picasso.Picasso
 import okhttp3.*
 import java.io.IOException
@@ -36,7 +38,7 @@ class EventDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        event = intent.extras?.getSerializable("event") as Event
+        getExtras()
 
         setContentView(R.layout.activity_event_detail)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -51,18 +53,21 @@ class EventDetailsActivity : AppCompatActivity() {
         timeoutLayout = findViewById(R.id.timeoutLayout)
         progressBar = findViewById(R.id.progressBar)
 
+        val friendlyDataCtrl = FriendlyDataCtrl()
         Picasso.get().load(event.imageURL).resize(150,150).into(ivEvent)
         tvEventTitle.text = event.title.capitalize()
-        tvEventPrice.text = event.price
+        tvEventPrice.text = "${event.price} R$"
         tvEventDescription.text = event.description
-        tvEventDate.text = event.date
+        tvEventDate.text = friendlyDataCtrl.getDateTime(event.date)
 
         btCheckin.setOnClickListener {
             checkinEvent()
         }
 
-        progressBar.visibility = View.VISIBLE
+    }
 
+    fun getExtras(){
+        event = intent.getSerializableExtra("event") as Event
     }
 
 
@@ -77,18 +82,23 @@ class EventDetailsActivity : AppCompatActivity() {
             .post(formBody)
             .build()
 
+        progressBar.visibility = View.VISIBLE
 
         httpClient.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.i("EventDetailsActivity",e.message + "TIMEOUT TIMEOUT")
                 timeoutLayout.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
             }
 
             override fun onResponse(call: Call, response: Response) {
-                System.out.println("FOI")
+                runOnUiThread{
+                    btCheckin.text = "CHECKED"
+                    btCheckin.setBackgroundColor(Color.GREEN)
+                }
             }
         })
+
+        progressBar.visibility = View.GONE
     }
 
 
@@ -120,9 +130,15 @@ class EventDetailsActivity : AppCompatActivity() {
 
         when(id){
             R.id.action_share -> shareContent()
+            android.R.id.home -> onBackPressed()
         }
 
         return super.onOptionsItemSelected(item)
     }
+
+    override fun onBackPressed() {
+        finish()
+    }
+
 
 }

@@ -1,6 +1,6 @@
 package com.example.eventsapi.activity
 
-import android.content.Context
+
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,16 +9,12 @@ import android.widget.AdapterView
 import android.widget.GridView
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.eventsapi.R
 import com.example.eventsapi.activity.adapter.EventListAdapter
 import com.example.eventsapi.model.Event
-import kotlinx.android.synthetic.main.activity_main.*
-
-
 import okhttp3.*
-import org.json.JSONObject
+import org.json.JSONArray
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -35,7 +31,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar as Toolbar?)
 
         progressBar = findViewById(R.id.progressBar)
         timeoutLayout = findViewById(R.id.timeoutLayout)
@@ -60,23 +55,21 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
 
             override fun onResponse(call: Call, response: Response) {
                 val responseString = response.body()?.string() ?: "{}"
-
-                val jsonResponse = JSONObject(responseString)
-                val eventsJsonArray = jsonResponse.getJSONArray("")
+                val eventsJsonArray = JSONArray(responseString)
 
                 for(i in 0 until eventsJsonArray.length()){
-                    val typeJsonObj = eventsJsonArray.getJSONObject(i)
-                    val eventID = typeJsonObj.getString("eventId")
-                    val title = typeJsonObj.getString("title")
-                    val price = typeJsonObj.getString("price")
-                    val description = typeJsonObj.getString("description")
-                    val imageURL = typeJsonObj.getString("image")
-                    val date = typeJsonObj.getString("date")
-                    val typeObj = Event(eventID, title, price, description, imageURL, date)
-                    eventsArray.add(typeObj)
+                    val eventJsonObject = eventsJsonArray.getJSONObject(i)
+                        val peopleInfo = eventJsonObject.getJSONArray("people")
+                        val eventID = peopleInfo.getJSONObject(0).getString("eventId")
+                    val title = eventJsonObject.getString("title")
+                    val price = eventJsonObject.getString("price")
+                    val description = eventJsonObject.getString("description")
+                    val imageURL = eventJsonObject.getString("image")
+                    val date = eventJsonObject.getString("date")
+                    val eventObj = Event(eventID, title, price, description, imageURL, date)
+                    eventsArray.add(eventObj)
                 }
 
-                //Atualiza a interface
                 runOnUiThread {
                     progressBar.visibility = View.GONE
                     eventAdapter.notifyDataSetChanged()
@@ -89,16 +82,17 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
 
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val editor = getSharedPreferences("event", Context.MODE_PRIVATE).edit()
-        editor.putString("eventID",eventsArray.get(position).eventId)
-        editor.putString("title",eventsArray.get(position).title)
-        editor.putString("price",eventsArray.get(position).price)
-        editor.putString("description",eventsArray.get(position).description)
-        editor.putString("imageURL",eventsArray.get(position).imageURL)
-        editor.putString("date",eventsArray.get(position).date)
-        editor.commit()
+        val bundle = Bundle()
+//        bundle.putString("eventID",eventsArray.get(position).eventId)
+//        bundle.putString("title",eventsArray.get(position).title)
+//        bundle.putString("price",eventsArray.get(position).price)
+//        bundle.putString("description",eventsArray.get(position).description)
+//        bundle.putString("imageURL",eventsArray.get(position).imageURL)
+//        bundle.putString("date",eventsArray.get(position).date)
+        bundle.putSerializable("event", eventsArray.get(position))
 
         val intent = Intent(this, EventDetailsActivity::class.java)
+        intent.putExtras(bundle)
         startActivity(intent)
     }
 

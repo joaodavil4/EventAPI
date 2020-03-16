@@ -20,7 +20,7 @@
         android:columnWidth="150dp"
         android:id="@+id/gridViewTypes"/>
 
-    <androidx.constraintlayout.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:visibility="gone"
         android:id="@+id/timeoutLayout"
         android:layout_width="match_parent"
@@ -56,7 +56,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
 
-    </androidx.constraintlayout.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <ProgressBar
